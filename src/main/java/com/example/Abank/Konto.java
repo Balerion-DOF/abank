@@ -15,11 +15,11 @@ public class Konto {
     private String Imie;
     private String Nazwisko;
     private float saldo;
-    private Date rok_utworzenia;
+    private int rok_utworzenia;
 
     public Konto(){}
 
-    public Konto(Long id, String Imie, String Nazwisko,float saldo, Date rok_utworzenia) {
+    public Konto(Long id, String Imie, String Nazwisko,float saldo, int rok_utworzenia) {
         this.id = id;
         this.Imie = Imie;
         this.Nazwisko = Nazwisko;
@@ -59,11 +59,12 @@ public class Konto {
         this.saldo = saldo;
     }
 
-    public Date getRok_utworzenia() {
+
+    public int getRok_utworzenia() {
         return rok_utworzenia;
     }
 
-    public void setRok_utworzenia(Date rok_utworzenia) {
+    public void setRok_utworzenia(int rok_utworzenia) {
         this.rok_utworzenia = rok_utworzenia;
     }
 }
