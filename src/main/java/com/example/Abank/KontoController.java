@@ -14,14 +14,14 @@ public class KontoController {
     }
     @GetMapping("/getAll")
     public List<Konto> getAll(){
-        return kontoRepository.findAll();
         new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Nie można dojśc do strony");
+        return kontoRepository.findAll();
     }
 
     @PostMapping("/dodajK")
     public Konto addKonto(@RequestBody Konto konto){
-        return kontoRepository.save(konto);
         new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE,"Nie można użyć tego polecenia");
+        return kontoRepository.save(konto);
     }
     @GetMapping("/getById/{id}")
     public Konto getKonto(@PathVariable Long id) {
@@ -37,7 +37,8 @@ public class KontoController {
     public Konto edytuj_saldo (@RequestBody Konto konto2,@PathVariable Long id){
     Konto konto=kontoRepository.findById(id).orElseThrow();
     konto.setSaldo(konto2.getSaldo());
+        new ResponseStatusException(HttpStatus.NOT_FOUND,"Nieznaleziono konta o id: "+id);
     return kontoRepository.save(konto);
-    new ResponseStatusException(HttpStatus.NOT_FOUND,"Nieznaleziono konta o id: "+id);
+
    }
 }
