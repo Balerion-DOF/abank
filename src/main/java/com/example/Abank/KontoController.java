@@ -1,5 +1,6 @@
 package com.example.Abank;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -8,13 +9,19 @@ import java.util.List;
 @RestController
 @RequestMapping("/konto")
 public class KontoController {
+
+    private final DepositService depositService;
     private final KontoRepository kontoRepository;
-    public KontoController(KontoRepository kontoRepository){
+    private final WyplataService wyplataService;
+    public KontoController(KontoRepository kontoRepository, DepositService depositService,WyplataService wyplataService){
+        //Dependecy Injection //Wstrzykiwanie zależności
         this.kontoRepository=kontoRepository;
+        this.depositService = depositService;
+        this.wyplataService=wyplataService;
     }
     @GetMapping("/getAll")
     public List<Konto> getAll(){
-        new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Nie można dojśc do strony");
+        new ResponseStatusException(HttpStatus.NOT_FOUND,"Nie można dojśc do strony");
         return kontoRepository.findAll();
     }
 
@@ -34,11 +41,22 @@ public class KontoController {
         new ResponseStatusException(HttpStatus.NOT_FOUND,"Nieznaleziono konta o id: "+id);
    }
     @PutMapping("/edytujSaldo/{id}")
-    public Konto edytuj_saldo (@RequestBody Konto konto2,@PathVariable Long id){
-    Konto konto=kontoRepository.findById(id).orElseThrow();
-    konto.setSaldo(konto2.getSaldo());
-        new ResponseStatusException(HttpStatus.NOT_FOUND,"Nieznaleziono konta o id: "+id);
-    return kontoRepository.save(konto);
+    public Konto edytuj_saldo (@RequestBody Konto konto2,@PathVariable Long id) {
+        Konto konto = kontoRepository.findById(id).orElseThrow();
+        konto.setSaldo(konto2.getSaldo());
+        new ResponseStatusException(HttpStatus.NOT_FOUND, "Nieznaleziono konta o id: " + id);
+        return kontoRepository.save(konto);
+    }
 
-   }
+    @PostMapping("/depozyt")
+            public ResponseEntity<Double> deposit (@RequestParam double balance,@RequestParam double amount){
+       double newbalance= depositService.deposit(balance,amount);
+       return ResponseEntity.ok(newbalance);
+    }
+    @PostMapping("/wyplata")
+    public ResponseEntity<Double>wyplata (@RequestParam double balance,@RequestParam double amount){
+        double newbalance= wyplataService.wyplata(balance,amount);
+        return ResponseEntity.ok(newbalance);
+    }
+
 }
